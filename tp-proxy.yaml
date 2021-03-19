@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxyservice
+spec:
+  replicas: 1  
+  template:
+    metadata:
+      labels:
+        name: proxyservice
+    spec:
+      containers:
+      - name: proxyservice
+        image: datawire/telepresence-k8s:0.109
