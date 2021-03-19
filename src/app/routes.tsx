@@ -2,9 +2,8 @@ import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import { accessibleRouteChangeHandler } from '@app/utils/utils';
-import ProviderTableView from '@app/TableViews/components/ProviderTableView';
+import ProviderFilter from '@app/Filter/components/ProviderFilter';
 import Browsers from '@app/Browsing/components/Browsers';
-
 import PlayGround from '@app/PlayGround';
 import { NotFound } from '@app/NotFound/NotFound';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
@@ -35,11 +34,11 @@ const routes: AppRouteConfig[] = [
     label: 'Inventory',
     routes: [
       {
-        component: ProviderTableView,
+        component: ProviderFilter,
         exact: true,
-        label: 'Providers Table',
-        path: '/inventory/ProviderTableView',
-        title: 'Provider Table Inventory',
+        label: 'Search and Filter',
+        path: '/inventory/filters/provider',
+        title: 'Inventory Search and Filter',
       },
       {
         component: Browsers,

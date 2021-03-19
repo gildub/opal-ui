@@ -9,7 +9,7 @@ import {
   useNetworksByProvider,
   useStorageByProvider,
   useVMsByProvider,
-} from '../hooks/useProviderQueries';
+} from '@app/common/hooks/useProviderQueries';
 
 export enum BrowserType {
   hosts = 'hosts',

@@ -22,6 +22,7 @@ export const queryHostsByProvider = `
               cpuHotAddEnabled
               firmware
               host { id inMaintenance }
+              concerns { label category assessment }
               disks {
                 kind name: file shared
                 datastore { id }

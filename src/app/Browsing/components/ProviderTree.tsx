@@ -79,11 +79,11 @@ const sortProviders = (node) => {
 };
 
 const getItem = (node: any[], id: string) => {
-  const res = node.map((element) => {
+  const res = node.flatMap((element) => {
     if (element.id === id) return element;
     if (element.children) return getItem(element.children, id);
   });
-  return res.flat().filter((e) => e != null)[0];
+  return res.filter((e) => e != null)[0];
 };
 
 const ProviderTree: React.FunctionComponent<IProviderTreeProps> = ({ providers, browserType }: IProviderTreeProps) => {
