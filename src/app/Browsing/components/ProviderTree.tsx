@@ -113,6 +113,7 @@ const ProviderTree: React.FunctionComponent<IProviderTreeProps> = ({ providers, 
 
   sortProviders(providers);
   const treeItems = getTreeNodesFromProviderNode(providers);
+  const selectedItem = activeItem ? getItem(treeItems, activeItem) : undefined;
 
   return (
     <Grid hasGutter>
@@ -120,7 +121,8 @@ const ProviderTree: React.FunctionComponent<IProviderTreeProps> = ({ providers, 
         <TreeView
           data={treeItems}
           defaultAllExpanded
-          onSelect={(_, item) => goToItem(browserType, item.id)} /* activeItems={[activeItem]} */
+          onSelect={(_, item) => goToItem(browserType, item.id)}
+          activeItems={[selectedItem]}
         />
       </GridItem>
       <GridItem span={9}>
