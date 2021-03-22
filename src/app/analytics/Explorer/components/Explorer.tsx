@@ -9,7 +9,7 @@ import {
   useNetworksByProvider,
   useStorageByProvider,
   useVMsByProvider,
-} from '@app/common/hooks/useProviderQueries';
+} from '@app/analytics/common/hooks/useProviderQueries';
 
 export enum BrowserType {
   hosts = 'hosts',
@@ -18,12 +18,12 @@ export enum BrowserType {
   vms = 'vms',
 }
 
-const Browsers: React.FunctionComponent = () => {
+const Explorer: React.FunctionComponent = () => {
   const history = useHistory();
   const { browserType } = useBrowserRouteMatch();
 
   const handleTabClick = (_event, tabKey) => {
-    history.push(`/inventory/browsers/${tabKey}`);
+    history.push(`/analytics/explorer/${tabKey}`);
   };
 
   const hostsByProvider = useHostsByProvider();
@@ -60,4 +60,4 @@ const Browsers: React.FunctionComponent = () => {
   );
 };
 
-export default Browsers;
+export default Explorer;

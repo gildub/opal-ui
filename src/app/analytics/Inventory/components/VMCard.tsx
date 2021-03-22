@@ -18,12 +18,12 @@ const VMCard: React.FunctionComponent<IVMCardProps> = ({ vm }: IVMCardProps) => 
 
   const onClickNetwork = (network: string) => {
     const [networkId, provider] = network.split('.');
-    history.push(`/inventory/browsers/networks/${provider}/${networkId}`);
+    history.push(`/analytics/explorer/networks/${provider}/${networkId}`);
   };
 
   const onClickDatastore = (diskName: string) => {
     const [datastoreId, provider] = diskName.split('.');
-    history.push(`/inventory/browsers/storage/${provider}/${datastoreId}`);
+    history.push(`/analytics/explorer/storage/${provider}/${datastoreId}`);
   };
 
   return (
@@ -51,7 +51,7 @@ const VMCard: React.FunctionComponent<IVMCardProps> = ({ vm }: IVMCardProps) => 
           Host: {vm.host.id}, Status: {vm.host.inMaintenance ? 'In Maintenance' : 'Ready'}
         </CardBody>
       ) : null}
-      <CardBody>Concerns: {vm.concerns && vm.concerns.length > 0 ? vm.concerns : 'none'}</CardBody>
+      {/* <CardBody>Concerns: {vm.concerns && vm.concerns.length > 0 ? vm.concerns : 'none'}</CardBody> */}
       <CardBody>
         <DiskIcon /> Disks
         {vm.disks && vm.disks.length > 0 ? (

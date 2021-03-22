@@ -6,7 +6,7 @@ import {
   queryNetworksByProvider,
   queryStorageByProvider,
   queryVMsByProvider,
-} from '@app/Browsing/queries';
+} from '@app/analytics/Explorer/queries';
 
 export const useHostsByProvider = () => {
   const { data, _ } = useQuery('hostsByProvider', async () => {

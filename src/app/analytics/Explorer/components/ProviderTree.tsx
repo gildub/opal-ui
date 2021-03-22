@@ -11,9 +11,9 @@ import HostIcon from '@patternfly/react-icons/dist/js/icons/container-node-icon'
 import VMIcon from '@patternfly/react-icons/dist/js/icons/virtual-machine-icon';
 import FolderIcon from '@patternfly/react-icons/dist/js/icons/folder-icon';
 
-import InventoryCard from './InventoryCard';
+import InventoryCard from '@app/analytics/Inventory/components/InventoryCard';
 import useBrowserRouteMatch from '../hooks/useBrowserRouteMatch';
-import { BrowserType } from './Browsers';
+import { BrowserType } from './Explorer';
 import './ProviderTree.css';
 
 type ProviderTree = {

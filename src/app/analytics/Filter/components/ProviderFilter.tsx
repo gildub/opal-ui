@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PageSection, Title } from '@patternfly/react-core';
 
 import ProviderTable from './ProviderTable';
-import { useHostsByProvider } from '@app/common/hooks/useProviderQueries';
+import { useHostsByProvider } from '@app/analytics/common/hooks/useProviderQueries';
 
 const ProviderFilter: React.FunctionComponent = () => {
   const hostsByProvider = useHostsByProvider();

@@ -1,6 +1,6 @@
 import { useHistory, useRouteMatch } from 'react-router';
 
-import { BrowserType } from '../components/Browsers';
+import { BrowserType } from '../components/Explorer';
 
 interface IBrowserMatchParams {
   url: string;
@@ -17,13 +17,13 @@ const useBrowserRouteMatch = () => {
   const history = useHistory();
 
   const rootMatch = useRouteMatch<IBrowserMatchParams>({
-    path: '/inventory/browsers/:browserType',
+    path: '/analytics/explorer/:browserType',
     strict: true,
     sensitive: true,
   });
 
   const elementMatch = useRouteMatch<IElementMatchParams>({
-    path: '/inventory/browsers/:browserType/:provider/:elementId',
+    path: '/analytics/explorer/:browserType/:provider/:elementId',
     strict: true,
     sensitive: true,
   });
@@ -32,7 +32,7 @@ const useBrowserRouteMatch = () => {
 
   const goToItem = (browserType: BrowserType, itemId) => {
     const [element, provider] = itemId.split('.');
-    history.push(`/inventory/browsers/${browserType}/${provider}/${element}`);
+    history.push(`/analytics/explorer/${browserType}/${provider}/${element}`);
   };
 
   const activeItem = elementMatch?.params.elementId

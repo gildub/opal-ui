@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import { accessibleRouteChangeHandler } from '@app/utils/utils';
-import ProviderFilter from '@app/Filter/components/ProviderFilter';
-import Browsers from '@app/Browsing/components/Browsers';
-import PlayGround from '@app/PlayGround';
+import ProviderFilter from '@app/analytics/Filter/components/ProviderFilter';
+import Explorer from '@app/analytics/Explorer/components/Explorer';
+import PlayGround from '@app/analytics/PlayGround';
 import { NotFound } from '@app/NotFound/NotFound';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import { LastLocationProvider, useLastLocation } from 'react-router-last-location';
@@ -31,39 +31,39 @@ export type AppRouteConfig = IAppRoute | IAppRouteGroup;
 
 const routes: AppRouteConfig[] = [
   {
-    label: 'Inventory',
+    label: 'Analytics',
     routes: [
       {
         component: ProviderFilter,
         exact: true,
         label: 'Search and Filter',
-        path: '/inventory/filters/provider',
-        title: 'Inventory Search and Filter',
+        path: '/analytics/filters/provider',
+        title: 'analytics Search and Filter',
       },
       {
-        component: Browsers,
+        component: Explorer,
         exact: true,
-        path: '/inventory/browsers',
-        label: 'Browsers',
-        title: 'Inventory Browsers',
+        path: '/analytics/explorer',
+        label: 'Explorer',
+        title: 'analytics Explorer',
       },
       {
-        component: Browsers,
+        component: Explorer,
         exact: true,
-        path: '/inventory/browsers/:browserType',
-        title: 'Inventory Browsers',
+        path: '/analytics/explorer/:browserType',
+        title: 'analytics Explorer',
       },
       {
-        component: Browsers,
+        component: Explorer,
         exact: true,
-        path: '/inventory/browsers/:browserType/:provider/:itemId',
-        title: 'Inventory Browsers',
+        path: '/analytics/explorer/:browserType/:provider/:itemId',
+        title: 'analytics Explorer',
       },
       {
         component: PlayGround,
         exact: true,
         label: 'PlayGround',
-        path: '/inventory/playGround',
+        path: '/analytics/playGround',
         title: 'Inventory PlayGround',
       },
     ],

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Table, TableHeader, TableBody, sortable, ICell, IRow, wrappable } from '@patternfly/react-table';
 
-import { FilterToolbar, FilterType, FilterCategory } from '@app/common/components/FilterToolbar';
+import { FilterToolbar, FilterType, FilterCategory } from '@app/analytics/common/components/FilterToolbar';
 import { Flex, FlexItem, Level, LevelItem, TreeViewDataItem } from '@patternfly/react-core';
-import { useFilterState } from '@app/common/hooks/useFilterState';
+import { useFilterState } from '@app/analytics/common/hooks/useFilterState';
 
 interface IProviderTableProps {
   providers: any;
