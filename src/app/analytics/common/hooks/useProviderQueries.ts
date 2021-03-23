@@ -6,7 +6,8 @@ import {
   queryNetworksByProvider,
   queryStorageByProvider,
   queryVMsByProvider,
-} from '@app/analytics/Explorer/queries';
+  queryNamespacesByProvider,
+} from './queries';
 
 export const useHostsByProvider = () => {
   const { data, _ } = useQuery('hostsByProvider', async () => {
@@ -42,4 +43,13 @@ export const useVMsByProvider = () => {
   });
 
   return data && data.providers ? data.providers : undefined;
+};
+
+export const useNamespacesByProvider = () => {
+  const { data, _ } = useQuery('namespacesByProvider', async () => {
+    const openshift = await request('http://localhost:9002/graphql', queryNamespacesByProvider, {});
+    return openshift;
+  });
+
+  return data && data.openshift ? data.openshift : undefined;
 };

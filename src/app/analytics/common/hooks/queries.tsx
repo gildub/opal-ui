@@ -132,3 +132,21 @@ export const queryNetworksByProvider = `
     }
   }
 `;
+
+export const queryNamespacesByProvider = `
+  query NamespacesByProvider {
+    openshift {
+      id
+      kind
+      name
+      children: namespaces {
+        id
+        name
+        kind
+        children: vmcs {
+          id kind name
+        }
+      }
+    }
+  }
+`;

@@ -49,7 +49,6 @@ const hasVMConcernCategory = (concerns: any, category: string): any | undefined 
 
 const ProviderTable: React.FunctionComponent<IProviderTableProps> = ({ providers }: IProviderTableProps) => {
   const vms = getVMsFromTreeQuery(providers);
-  // console.log(vms);
   const filterCategories: FilterCategory<any>[] = [
     {
       key: 'id',

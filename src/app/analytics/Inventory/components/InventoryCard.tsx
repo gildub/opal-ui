@@ -9,7 +9,9 @@ import NetworkCard from './NetworkCard';
 import DVPortGroupCard from './DVPortGroupCard';
 import DVSwitchCard from './DVSwitchCard';
 import VMCard from './VMCard';
+import VMCCard from './VMCCard';
 import FolderCard from './FolderCard';
+import NamespaceCard from './NamespaceCard';
 
 interface IInventoryCardProps {
   item: any;
@@ -38,6 +40,12 @@ const InventoryCard: React.FunctionComponent<IInventoryCardProps> = ({ item }: I
         <VMCard vm={item}></VMCard>
       ) : item.kind === 'Folder' ? (
         <FolderCard folder={item}></FolderCard>
+      ) : item.kind === 'Openshift' ? (
+        <VCenterCard vcenter={item}></VCenterCard>
+      ) : item.kind === 'Namespace' ? (
+        <NamespaceCard namespace={item}></NamespaceCard>
+      ) : item.kind === 'VMC' ? (
+        <VMCCard vm={item}></VMCCard>
       ) : null}
     </>
   );

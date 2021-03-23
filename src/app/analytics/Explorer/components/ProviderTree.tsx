@@ -10,10 +10,11 @@ import NetworkIcon from '@patternfly/react-icons/dist/js/icons/network-icon';
 import HostIcon from '@patternfly/react-icons/dist/js/icons/container-node-icon';
 import VMIcon from '@patternfly/react-icons/dist/js/icons/virtual-machine-icon';
 import FolderIcon from '@patternfly/react-icons/dist/js/icons/folder-icon';
+import NamespaceIcon from '@patternfly/react-icons/dist/js/icons/namespaces-icon';
 
 import InventoryCard from '@app/analytics/Inventory/components/InventoryCard';
-import useBrowserRouteMatch from '../hooks/useBrowserRouteMatch';
-import { BrowserType } from './Explorer';
+import useExplorerRouteMatch from '../hooks/useExplorerRouteMatch';
+import { ProviderType, TreeType } from './Explorer';
 import './ProviderTree.css';
 
 type ProviderTree = {
@@ -24,7 +25,8 @@ type ProviderTree = {
 
 interface IProviderTreeProps {
   providers: ProviderTree[];
-  browserType: BrowserType;
+  providerType: ProviderType;
+  treeType: TreeType;
 }
 
 const getIcon = (kind) => {
@@ -52,11 +54,17 @@ const getIcon = (kind) => {
   if (kind === 'Host') {
     return <HostIcon />;
   }
-  if (kind === 'VM') {
+  if (kind.match(/VM|VMC/)) {
     return <VMIcon />;
   }
   if (kind === 'Folder') {
     return <FolderIcon />;
+  }
+  if (kind === 'Openshift') {
+    return <ProviderIcon />;
+  }
+  if (kind === 'Namespace') {
+    return <NamespaceIcon />;
   }
   return null;
 };
@@ -86,31 +94,24 @@ const getItem = (node: any[], id: string) => {
   return res.filter((e) => e != null)[0];
 };
 
-const ProviderTree: React.FunctionComponent<IProviderTreeProps> = ({ providers, browserType }: IProviderTreeProps) => {
-  const { activeItem, goToItem } = useBrowserRouteMatch();
-
-  const cardItem = activeItem ? getItem(providers, activeItem) : undefined;
-
+const ProviderTree: React.FunctionComponent<IProviderTreeProps> = ({
+  providers,
+  providerType,
+  treeType,
+}: IProviderTreeProps) => {
   const getTreeNodesFromProviderNode = (node: any[]): TreeViewDataItem[] =>
     node.map((element) => {
-      if (element.kind === 'VM') {
-        return {
-          name: `${element.name} (${element.id})`,
-          icon: getIcon(element.kind),
-          kind: 'VM',
-          id: element.id,
-        };
-      }
-
       return {
-        icon: getIcon(element.kind),
-        name: element.name,
+        id: element.id,
+        name: element.kind.match(/VM|VMC/) ? `${element.name} (${element.id})` : element.name,
         kind: element.kind,
-        id: element.id ? element.id : null,
+        icon: getIcon(element.kind),
         ...(element.children ? { children: getTreeNodesFromProviderNode(element.children) } : {}),
       };
     });
 
+  const { activeItem, goToItem } = useExplorerRouteMatch();
+  const cardItem = activeItem ? getItem(providers, activeItem) : undefined;
   sortProviders(providers);
   const treeItems = getTreeNodesFromProviderNode(providers);
   const selectedItem = activeItem ? getItem(treeItems, activeItem) : undefined;
@@ -121,7 +122,7 @@ const ProviderTree: React.FunctionComponent<IProviderTreeProps> = ({ providers, 
         <TreeView
           data={treeItems}
           defaultAllExpanded
-          onSelect={(_, item) => goToItem(browserType, item.id)}
+          onSelect={(_, item) => goToItem(providerType, treeType, item.id)}
           activeItems={[selectedItem]}
         />
       </GridItem>

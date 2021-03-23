@@ -8,6 +8,7 @@ import CPUIcon from '@patternfly/react-icons/dist/js/icons/cpu-icon';
 import IPIcon from '@patternfly/react-icons/dist/js/icons/pficon-network-range-icon';
 import DiskIcon from '@patternfly/react-icons/dist/js/icons/storage-domain-icon';
 import NetworkIcon from '@patternfly/react-icons/dist/js/icons/network-icon';
+import useExplorerRouteMatch from '@app/analytics/Explorer/hooks/useExplorerRouteMatch';
 
 interface IVMCardProps {
   vm: any;
@@ -16,14 +17,16 @@ interface IVMCardProps {
 const VMCard: React.FunctionComponent<IVMCardProps> = ({ vm }: IVMCardProps) => {
   const history = useHistory();
 
+  const { providerType } = useExplorerRouteMatch();
+
   const onClickNetwork = (network: string) => {
     const [networkId, provider] = network.split('.');
-    history.push(`/analytics/explorer/networks/${provider}/${networkId}`);
+    history.push(`/analytics/explorer/${providerType}/networks/${provider}/${networkId}`);
   };
 
   const onClickDatastore = (diskName: string) => {
     const [datastoreId, provider] = diskName.split('.');
-    history.push(`/analytics/explorer/storage/${provider}/${datastoreId}`);
+    history.push(`/analytics/explorer/${providerType}/storage/${provider}/${datastoreId}`);
   };
 
   return (
