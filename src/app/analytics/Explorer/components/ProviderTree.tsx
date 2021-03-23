@@ -30,7 +30,7 @@ interface IProviderTreeProps {
 }
 
 const getIcon = (kind) => {
-  if (kind === 'Provider') {
+  if (kind.match(/VSphere|Openshift/)) {
     return <ProviderIcon />;
   }
   if (kind === 'Datacenter') {
@@ -59,9 +59,6 @@ const getIcon = (kind) => {
   }
   if (kind === 'Folder') {
     return <FolderIcon />;
-  }
-  if (kind === 'Openshift') {
-    return <ProviderIcon />;
   }
   if (kind === 'Namespace') {
     return <NamespaceIcon />;
@@ -111,10 +108,10 @@ const ProviderTree: React.FunctionComponent<IProviderTreeProps> = ({
     });
 
   const { activeItem, goToItem } = useExplorerRouteMatch();
-  const cardItem = activeItem ? getItem(providers, activeItem) : undefined;
   sortProviders(providers);
   const treeItems = getTreeNodesFromProviderNode(providers);
   const selectedItem = activeItem ? getItem(treeItems, activeItem) : undefined;
+  const cardItem = activeItem ? getItem(providers, activeItem) : undefined;
 
   return (
     <Grid hasGutter>

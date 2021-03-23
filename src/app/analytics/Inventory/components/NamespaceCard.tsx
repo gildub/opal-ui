@@ -8,9 +8,8 @@ interface INamespaceCardProps {
 const NamespaceCard: React.FunctionComponent<INamespaceCardProps> = ({ namespace }: INamespaceCardProps) => {
   return (
     <Card>
-      <CardTitle>
-        Namespace {namespace.name} ({namespace.id.split('.')[0]})
-      </CardTitle>
+      <CardTitle>Namespace</CardTitle>
+      <CardBody>Name: {namespace.name}</CardBody>
       <CardBody>Provider: {namespace.id.split('.')[1]}</CardBody>
     </Card>
   );

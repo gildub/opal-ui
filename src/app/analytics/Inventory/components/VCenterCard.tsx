@@ -8,9 +8,9 @@ interface IVCenterCardProps {
 const VCenterCard: React.FunctionComponent<IVCenterCardProps> = ({ vcenter }: IVCenterCardProps) => {
   return (
     <Card>
-      <CardTitle>
-        VCenter {vcenter.name} ({vcenter.id.split('.')[0]})
-      </CardTitle>
+      <CardTitle>VCenter</CardTitle>
+      <CardBody>Name: {vcenter.name}</CardBody>
+      <CardBody>Id: {vcenter.id}</CardBody>
       <CardBody>Product: {vcenter.product}</CardBody>
     </Card>
   );

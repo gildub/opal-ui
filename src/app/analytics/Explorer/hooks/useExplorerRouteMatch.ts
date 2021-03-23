@@ -2,25 +2,29 @@ import { useHistory, useRouteMatch } from 'react-router';
 
 import { ProviderType, TreeType } from '../components/Explorer';
 
-interface IBrowserMatchParams {
+interface IExploraterMatchParams {
   url: string;
-  treeType: string;
   providerType: string;
+  treeType: string;
 }
-
-interface IElementMatchParams {
-  url: string;
-  providerType: string;
-  treeType: string;
+interface IProviderMatchParams extends IExploraterMatchParams {
   provider: string;
+}
+interface IElementMatchParams extends IProviderMatchParams {
   elementId: string;
 }
 
 const useExplorerRouteMatch = () => {
   const history = useHistory();
 
-  const rootMatch = useRouteMatch<IBrowserMatchParams>({
+  const rootMatch = useRouteMatch<IExploraterMatchParams>({
     path: '/analytics/explorer/:providerType/:treeType',
+    strict: true,
+    sensitive: true,
+  });
+
+  const providerMatch = useRouteMatch<IProviderMatchParams>({
+    path: '/analytics/explorer/:providerType/:treeType/:provider',
     strict: true,
     sensitive: true,
   });
@@ -32,7 +36,21 @@ const useExplorerRouteMatch = () => {
   });
 
   const goToItem = (providerType: ProviderType, treeType: TreeType, itemId) => {
-    const [element, provider] = itemId.split('.');
+    const getProvider = (id) => {
+      return id.split('.')[1];
+    };
+
+    const getItem = (id) => {
+      return id.split('.')[0];
+    };
+
+    const provider = getProvider(itemId);
+    const element = getItem(itemId);
+    if (!provider) {
+      history.push(`/analytics/explorer/${providerType}/${treeType}/${element}`);
+      return;
+    }
+
     history.push(`/analytics/explorer/${providerType}/${treeType}/${provider}/${element}`);
   };
 
@@ -49,15 +67,12 @@ const useExplorerRouteMatch = () => {
     return 'hosts';
   };
 
-  const activeItemFromRoute = () => {
-    return elementMatch?.params.elementId
-      ? `${elementMatch.params.elementId}.${elementMatch.params.provider}`
-      : undefined;
-  };
-
   const providerType = providerTypeFromRoute();
   const treeType = treeTypeFromRoute(providerType);
-  const activeItem = activeItemFromRoute();
+
+  const activeItem = elementMatch?.params.elementId
+    ? `${elementMatch.params.elementId}.${elementMatch.params.provider}`
+    : `${providerMatch?.params.provider}`;
 
   return { providerType, treeType, activeItem, goToItem };
 };

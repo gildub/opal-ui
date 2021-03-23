@@ -62,6 +62,12 @@ const routes: AppRouteConfig[] = [
       {
         component: Explorer,
         exact: true,
+        path: '/analytics/explorer/:providerType/:viewType/:provider',
+        title: 'analytics Explorer Provider Card',
+      },
+      {
+        component: Explorer,
+        exact: true,
         path: '/analytics/explorer/:providerType/:viewType/:provider/:itemId',
         title: 'analytics Explorer Card',
       },

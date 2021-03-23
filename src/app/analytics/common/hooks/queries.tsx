@@ -144,7 +144,7 @@ export const queryNamespacesByProvider = `
         name
         kind
         children: vmcs {
-          id kind name
+          id kind name namespace
         }
       }
     }

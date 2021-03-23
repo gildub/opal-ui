@@ -32,7 +32,10 @@ const VMCard: React.FunctionComponent<IVMCardProps> = ({ vm }: IVMCardProps) => 
   return (
     <Card>
       <CardTitle>
-        Virtual Machine {vm.name} ({vm.id.split('.')[0]})
+        Virtual Machine
+        <CardBody>
+          Name: {vm.name} - Id: {vm.id.split('.')[0]}
+        </CardBody>
       </CardTitle>
       <CardBody>Provider: {vm.id.split('.')[1]}</CardBody>
       <CardBody>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import VCenterCard from './VCenterCard';
+import OpenshiftCard from './OpenshiftCard';
 import DatacenterCard from './DatacenterCard';
 import DatastoreCard from './DatastoreCard';
 import ClusterCard from './ClusterCard';
@@ -20,7 +21,7 @@ interface IInventoryCardProps {
 const InventoryCard: React.FunctionComponent<IInventoryCardProps> = ({ item }: IInventoryCardProps) => {
   return (
     <>
-      {item.kind === 'Provider' ? (
+      {item.kind === 'VSphere' ? (
         <VCenterCard vcenter={item}></VCenterCard>
       ) : item.kind === 'Datacenter' ? (
         <DatacenterCard datacenter={item}></DatacenterCard>
@@ -41,11 +42,11 @@ const InventoryCard: React.FunctionComponent<IInventoryCardProps> = ({ item }: I
       ) : item.kind === 'Folder' ? (
         <FolderCard folder={item}></FolderCard>
       ) : item.kind === 'Openshift' ? (
-        <VCenterCard vcenter={item}></VCenterCard>
+        <OpenshiftCard openshift={item}></OpenshiftCard>
       ) : item.kind === 'Namespace' ? (
         <NamespaceCard namespace={item}></NamespaceCard>
       ) : item.kind === 'VMC' ? (
-        <VMCCard vm={item}></VMCCard>
+        <VMCCard vmc={item}></VMCCard>
       ) : null}
     </>
   );
