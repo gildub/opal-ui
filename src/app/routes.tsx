@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import { accessibleRouteChangeHandler } from '@app/utils/utils';
-import ProviderFilter from '@app/analytics/Filter/components/ProviderFilter';
+import HostTreeFlat from '@app/analytics/Explorer/components/HostTreeFlat';
 import Explorer from '@app/analytics/Explorer/components/Explorer';
 import PlayGround from '@app/analytics/PlayGround';
 import { NotFound } from '@app/NotFound/NotFound';
@@ -34,7 +34,7 @@ const routes: AppRouteConfig[] = [
     label: 'Analytics',
     routes: [
       {
-        component: ProviderFilter,
+        component: HostTreeFlat,
         exact: true,
         label: 'Search and Filter',
         path: '/analytics/filters/provider',

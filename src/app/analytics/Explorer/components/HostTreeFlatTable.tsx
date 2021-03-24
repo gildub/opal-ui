@@ -5,7 +5,7 @@ import { FilterToolbar, FilterType, FilterCategory } from '@app/analytics/common
 import { Flex, FlexItem, Level, LevelItem, TreeViewDataItem } from '@patternfly/react-core';
 import { useFilterState } from '@app/analytics/common/hooks/useFilterState';
 
-interface IProviderTableProps {
+interface IHostTreeFlatTableProps {
   providers: any;
 }
 
@@ -47,7 +47,9 @@ const getMostSevereVMConcern = (concerns: any): any | null => {
 const hasVMConcernCategory = (concerns: any, category: string): any | undefined =>
   concerns.find((concern) => concern.category === category);
 
-const ProviderTable: React.FunctionComponent<IProviderTableProps> = ({ providers }: IProviderTableProps) => {
+const HostTreeFlatTable: React.FunctionComponent<IHostTreeFlatTableProps> = ({
+  providers,
+}: IHostTreeFlatTableProps) => {
   const vms = getVMsFromTreeQuery(providers);
   const filterCategories: FilterCategory<any>[] = [
     {
@@ -205,4 +207,4 @@ const ProviderTable: React.FunctionComponent<IProviderTableProps> = ({ providers
   );
 };
 
-export default ProviderTable;
+export default HostTreeFlatTable;
