@@ -11,6 +11,7 @@ import {
   useVMsByProvider,
   useNamespacesByProvider,
 } from '@app/analytics/common/hooks/useProviderQueries';
+import HostTreeFlatTable from './HostTreeFlatTable';
 
 export enum TreeType {
   hosts = 'hosts',
@@ -27,7 +28,7 @@ export enum ProviderType {
 
 const Explorer: React.FunctionComponent = () => {
   const history = useHistory();
-  const { providerType, treeType } = useExplorerRouteMatch();
+  const { providerType, treeType, pageTitle, pageTitleSub } = useExplorerRouteMatch();
 
   const handleTabClick = (_event, tabKey) => {
     const view = tabKey === 'openshift' ? 'namespaces' : 'hosts';
@@ -47,12 +48,12 @@ const Explorer: React.FunctionComponent = () => {
   return (
     <PageSection>
       <Title headingLevel="h2" size="lg">
-        Providers Explorer
+        {pageTitle} - {pageTitleSub}
       </Title>
       <div>
         <Tabs activeKey={providerType} onSelect={handleTabClick} isBox={false}>
           <Tab eventKey="vsphere" title={<TabTitleText>VSphere</TabTitleText>}>
-            <Tabs activeKey={treeType} isSecondary onSelect={handleTabClickSecond}>
+            <Tabs activeKey={treeType} isSecondary onSelect={(_event, tabKey) => handleTabClickSecond(_event, tabKey)}>
               <Tab eventKey="hosts" title={<TabTitleText>Hosts and Clusters</TabTitleText>}>
                 {hostsByProvider ? (
                   <ProviderTree
@@ -85,10 +86,13 @@ const Explorer: React.FunctionComponent = () => {
                   />
                 ) : null}
               </Tab>
+              <Tab eventKey="hostTreeFlat" title={<TabTitleText>Flat Host VMs</TabTitleText>}>
+                {hostsByProvider ? <HostTreeFlatTable providers={hostsByProvider} /> : null}
+              </Tab>
             </Tabs>
           </Tab>
           <Tab eventKey="openshift" title={<TabTitleText>OpenShift</TabTitleText>}>
-            <Tabs activeKey={treeType} isSecondary onSelect={handleTabClickSecond}>
+            <Tabs activeKey={treeType} isSecondary onSelect={(_event, tabKey) => handleTabClickSecond(_event, tabKey)}>
               <Tab eventKey="namespaces" title={<TabTitleText>Namespaces</TabTitleText>}>
                 {namespacesByProvider ? (
                   <ProviderTree

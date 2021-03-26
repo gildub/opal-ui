@@ -143,9 +143,19 @@ export const queryNamespacesByProvider = `
         id
         name
         kind
-        children: vmcs {
-          id kind name namespace
-        }
+      }
+    }
+  }
+`;
+
+export const queryVMCsByProvider = `
+  query VMCsByProvider {
+    openshift {
+      id
+      kind
+      name
+      children: vmcs {
+        id kind name namespace
       }
     }
   }

@@ -1,3 +1,4 @@
+import { ContextSelectorFooter } from '@patternfly/react-core';
 import { useHistory, useRouteMatch } from 'react-router';
 
 import { ProviderType, TreeType } from '../components/Explorer';
@@ -14,7 +15,41 @@ interface IElementMatchParams extends IProviderMatchParams {
   elementId: string;
 }
 
+const tabStates = [
+  {
+    kind: 'vsphere',
+    title: 'VSphere Explorator ',
+  },
+  {
+    kind: 'openshift',
+    title: 'Openshift Explorator',
+  },
+];
+
+const subTabStates = [
+  { kind: 'hosts', title: 'Filter Virtual Machines (by Host and Cluster view)' },
+  {
+    kind: 'hostFlat',
+    title: 'Flat VMs from Host & Cluster',
+  },
+  {
+    kind: 'vmTree',
+    title: 'Virtual Machine view',
+  },
+  {
+    kind: 'networkTree',
+    title: 'Network view',
+  },
+  {
+    kind: 'storageTree',
+    title: 'Storage view',
+  },
+];
+
 const useExplorerRouteMatch = () => {
+  const getTitle = (providerType) => tabStates.find((tab) => tab.kind === providerType)?.title;
+  const getSubTitle = (treeType) => subTabStates.find((tab) => tab.kind === treeType)?.title;
+
   const history = useHistory();
 
   const rootMatch = useRouteMatch<IExploraterMatchParams>({
@@ -74,7 +109,10 @@ const useExplorerRouteMatch = () => {
     ? `${elementMatch.params.elementId}.${elementMatch.params.provider}`
     : `${providerMatch?.params.provider}`;
 
-  return { providerType, treeType, activeItem, goToItem };
+  const pageTitle = getTitle(providerType);
+  const pageTitleSub = getSubTitle(treeType);
+
+  return { providerType, treeType, activeItem, pageTitle, pageTitleSub, goToItem };
 };
 
 export default useExplorerRouteMatch;
