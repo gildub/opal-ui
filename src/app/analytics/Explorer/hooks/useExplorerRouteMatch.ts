@@ -27,23 +27,22 @@ const tabStates = [
 ];
 
 const subTabStates = [
-  { kind: 'hosts', title: 'Filter Virtual Machines (by Host and Cluster view)' },
+  { kind: 'hosts', title: 'Host and Cluster view' },
+  { kind: 'vms', title: 'Virtual Machine Hierarchy view' },
   {
-    kind: 'hostFlat',
-    title: 'Flat VMs from Host & Cluster',
-  },
-  {
-    kind: 'vmTree',
-    title: 'Virtual Machine view',
-  },
-  {
-    kind: 'networkTree',
+    kind: 'networks',
     title: 'Network view',
   },
   {
-    kind: 'storageTree',
+    kind: 'storage',
     title: 'Storage view',
   },
+  { kind: 'hostTreeFlat', title: 'Filter Virtual Machines (by Host and Cluster)' },
+  {
+    kind: 'namespaces',
+    title: 'Namespace view',
+  },
+  { kind: 'vmcs', title: 'Virtual Machines' },
 ];
 
 const useExplorerRouteMatch = () => {
