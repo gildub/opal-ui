@@ -10,6 +10,7 @@ import {
   useStorageByProvider,
   useVMsByProvider,
   useNamespacesByProvider,
+  useVMCsByProvider,
 } from '@app/analytics/common/hooks/useProviderQueries';
 import HostTreeFlatTable from './HostTreeFlatTable';
 
@@ -18,6 +19,7 @@ export enum TreeType {
   networks = 'networks',
   storage = 'storage',
   vms = 'vms',
+  vmcs = 'vmcs',
   namespaces = 'namespaces',
 }
 
@@ -44,6 +46,7 @@ const Explorer: React.FunctionComponent = () => {
   const storageByProvider = useStorageByProvider();
   const vmsByProvider = useVMsByProvider();
   const namespacesByProvider = useNamespacesByProvider();
+  const vmcsByProvider = useVMCsByProvider();
 
   return (
     <PageSection>
@@ -99,6 +102,15 @@ const Explorer: React.FunctionComponent = () => {
                     providers={namespacesByProvider}
                     providerType={ProviderType.openshift}
                     treeType={TreeType.namespaces}
+                  />
+                ) : null}
+              </Tab>
+              <Tab eventKey="vmcs" title={<TabTitleText>Virtual Machines</TabTitleText>}>
+                {vmcsByProvider ? (
+                  <ProviderTree
+                    providers={vmcsByProvider}
+                    providerType={ProviderType.openshift}
+                    treeType={TreeType.vmcs}
                   />
                 ) : null}
               </Tab>

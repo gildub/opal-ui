@@ -7,6 +7,7 @@ import {
   queryStorageByProvider,
   queryVMsByProvider,
   queryNamespacesByProvider,
+  queryVMCsByProvider,
 } from './queries';
 
 export const useHostsByProvider = () => {
@@ -48,6 +49,15 @@ export const useVMsByProvider = () => {
 export const useNamespacesByProvider = () => {
   const { data, _ } = useQuery('namespacesByProvider', async () => {
     const openshift = await request('http://localhost:9002/graphql', queryNamespacesByProvider, {});
+    return openshift;
+  });
+
+  return data && data.openshift ? data.openshift : undefined;
+};
+
+export const useVMCsByProvider = () => {
+  const { data, _ } = useQuery('vmcsByProvider', async () => {
+    const openshift = await request('http://localhost:9002/graphql', queryVMCsByProvider, {});
     return openshift;
   });
 
