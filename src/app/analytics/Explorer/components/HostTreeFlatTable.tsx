@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { Table, TableHeader, TableBody, sortable, ICell, IRow, wrappable } from '@patternfly/react-table';
+import { Table, TableHeader, TableBody, sortable, ICell, IRow, wrappable, cellWidth } from '@patternfly/react-table';
 
 import { FilterToolbar, FilterType, FilterCategory } from '@app/analytics/common/components/FilterToolbar';
-import { Flex, FlexItem, Level, LevelItem, TreeViewDataItem } from '@patternfly/react-core';
+import { Button, Flex, FlexItem, Level, LevelItem, TreeViewDataItem } from '@patternfly/react-core';
 import { useFilterState } from '@app/analytics/common/hooks/useFilterState';
+import useExplorerRouteMatch from '../hooks/useExplorerRouteMatch';
+import { ProviderType, TreeType } from './Explorer';
 
 interface IHostTreeFlatTableProps {
   providers: any;
@@ -17,7 +19,7 @@ const getVMsFromTreeQuery = (providers: any[]): any[] =>
           host.children.flatMap((vm) => {
             return {
               ...vm,
-              id: vm.id.split('.')[0],
+              id: vm.id,
               provider: provider.name,
               datacenter: datacenter.name,
               cluster: cluster.name,
@@ -44,7 +46,10 @@ const getMostSevereVMConcern = (concerns: any): any | null => {
   return { category: 'Warning', label: 'Unknown', assessment: '' };
 };
 
-const hasVMConcernCategory = (concerns: any, category: string): any | undefined =>
+const getConcernsByCategory = (concerns: any, category: string) =>
+  concerns.filter((concern) => concern.category === category);
+
+const hasVMConcernCategory = (concerns: any, category: string) =>
   concerns.find((concern) => concern.category === category);
 
 const HostTreeFlatTable: React.FunctionComponent<IHostTreeFlatTableProps> = ({
@@ -111,15 +116,15 @@ const HostTreeFlatTable: React.FunctionComponent<IHostTreeFlatTableProps> = ({
       title: 'Concern',
       type: FilterType.select,
       selectOptions: [
-        { key: 'Warning', value: 'Warning' },
         { key: 'Critical', value: 'Critical' },
-        { key: 'Advisory', value: 'Advisory' },
+        { key: 'Warning', value: 'Warning' },
+        { key: 'Information', value: 'Information' },
       ],
       getItemValue: (item) => {
         if (item.concerns) {
           if (hasVMConcernCategory(item.concerns, 'Critical')) return 'Critical';
           if (hasVMConcernCategory(item.concerns, 'Warning')) return 'Warning';
-          if (hasVMConcernCategory(item.concerns, 'Advisory')) return 'Advisory';
+          if (hasVMConcernCategory(item.concerns, 'Information')) return 'Information';
         }
         return '';
       },
@@ -150,33 +155,41 @@ const HostTreeFlatTable: React.FunctionComponent<IHostTreeFlatTableProps> = ({
   const columns: ICell[] = [
     { title: 'Id', transforms: [sortable, wrappable] },
     { title: 'Name', transforms: [sortable, wrappable] },
-    { title: 'Provider', transforms: [sortable, wrappable] },
-    { title: 'Datacenter', transforms: [sortable, wrappable] },
-    { title: 'Cluster', transforms: [sortable, wrappable] },
-    { title: 'Host', transforms: [sortable, wrappable] },
+    { title: 'Provider / Datacenter/ Cluster / Host', transforms: [sortable, cellWidth(30), wrappable] },
     { title: 'Concerns', transforms: [sortable, wrappable] },
     { title: 'Power State', transforms: [sortable, wrappable] },
     { title: 'Memory', transforms: [sortable, wrappable] },
   ];
 
   const { filterValues, setFilterValues, filteredItems } = useFilterState(vms, filterCategories);
+  const { goToItem } = useExplorerRouteMatch();
 
   const rows: IRow[] = [];
 
   if (filteredItems) {
     filteredItems.forEach((vm) => {
-      const concern = getMostSevereVMConcern(vm.concerns).category;
+      const highestConcern = getMostSevereVMConcern(vm.concerns).category;
+      const criticalConcerns = getConcernsByCategory(vm.concerns, 'Critical');
+      const warningConcerns = getConcernsByCategory(vm.concerns, 'Warning');
+      const informationConcerns = getConcernsByCategory(vm.concerns, 'Information');
 
       rows.push({
         meta: { vm },
         cells: [
-          vm.id,
+          vm.id.split('.')[0],
           vm.name,
-          vm.provider,
-          vm.datacenter,
-          vm.cluster,
-          vm.host,
-          concern ? concern : 'Ok',
+          `${vm.provider}/${vm.datacenter}/${vm.cluster}/${vm.host}`,
+          highestConcern ? (
+            <Button variant="link" onClick={(event) => goToItem(ProviderType.vsphere, TreeType.hosts, vm.id)}>
+              {criticalConcerns.length ? `${criticalConcerns.length} x Critical` : null}
+              {criticalConcerns.length && warningConcerns.length ? ' - ' : null}
+              {warningConcerns.length ? `${warningConcerns.length} x Warning` : null}
+              {warningConcerns.length && informationConcerns.length ? ' - ' : null}
+              {informationConcerns.length ? `${informationConcerns.length} x Information` : null}
+            </Button>
+          ) : (
+            'No concerns'
+          ),
           vm.powerState,
           vm.memoryMB,
         ],
@@ -199,7 +212,7 @@ const HostTreeFlatTable: React.FunctionComponent<IHostTreeFlatTableProps> = ({
           </Flex>
         </LevelItem>
       </Level>
-      <Table aria-label="Providers table" cells={columns} rows={rows}>
+      <Table aria-label="Providers table" variant="compact" cells={columns} rows={rows}>
         <TableHeader />
         <TableBody />
       </Table>

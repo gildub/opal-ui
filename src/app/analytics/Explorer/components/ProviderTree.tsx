@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, FlexItem, Grid, GridItem, TreeView, TreeViewDataItem } from '@patternfly/react-core';
+import { Button, Flex, FlexItem, Grid, GridItem, TreeView, TreeViewDataItem } from '@patternfly/react-core';
 import ProviderIcon from '@patternfly/react-icons/dist/js/icons/cloud-tenant-icon';
 import DatacenterIcon from '@patternfly/react-icons/dist/js/icons/infrastructure-icon';
 import DatastoreIcon from '@patternfly/react-icons/dist/js/icons/storage-domain-icon';
@@ -85,33 +85,45 @@ const sortProviders = (node) => {
 
 const getItem = (node: any[], id: string) => {
   const res = node.flatMap((element) => {
-    if (element.id === id) return element;
+    if (element.id === id || element.id.split('.')[0] === id) return element;
     if (element.children) return getItem(element.children, id);
   });
   return res.filter((e) => e != null)[0];
 };
+
+const getTreeNodesFromProviderNode = (node: any[]): TreeViewDataItem[] =>
+  node.map((element) => {
+    return {
+      id: element.id,
+      name: element.name,
+      kind: element.kind,
+      icon: getIcon(element.kind),
+      ...(element.children ? { children: getTreeNodesFromProviderNode(element.children) } : {}),
+    };
+  });
 
 const ProviderTree: React.FunctionComponent<IProviderTreeProps> = ({
   providers,
   providerType,
   treeType,
 }: IProviderTreeProps) => {
-  const getTreeNodesFromProviderNode = (node: any[]): TreeViewDataItem[] =>
-    node.map((element) => {
-      return {
-        id: element.id,
-        name: element.kind.match(/VM|VMC/) ? `${element.name} (${element.id})` : element.name,
-        kind: element.kind,
-        icon: getIcon(element.kind),
-        ...(element.children ? { children: getTreeNodesFromProviderNode(element.children) } : {}),
-      };
-    });
-
   const { activeItem, goToItem } = useExplorerRouteMatch();
   sortProviders(providers);
+
+  const [cardItem, setCardItem] = React.useState(activeItem());
+
   const treeItems = getTreeNodesFromProviderNode(providers);
-  const selectedItem = activeItem ? getItem(treeItems, activeItem) : undefined;
-  const cardItem = activeItem ? getItem(providers, activeItem) : undefined;
+  const selectedItem = activeItem() !== null ? getItem(treeItems, activeItem()) : undefined;
+
+  React.useEffect(() => {
+    if (activeItem() !== null) setCardItem(getItem(providers, activeItem()));
+  }, [providers, activeItem]);
+
+  const onClick = (providerType, treeType, itemId) => {
+    const item = getItem(providers, activeItem());
+    setCardItem(item);
+    goToItem(providerType, treeType, itemId);
+  };
 
   return (
     <Grid hasGutter>
@@ -119,7 +131,7 @@ const ProviderTree: React.FunctionComponent<IProviderTreeProps> = ({
         <TreeView
           data={treeItems}
           defaultAllExpanded
-          onSelect={(_, item) => goToItem(providerType, treeType, item.id)}
+          onSelect={(_, item) => onClick(providerType, treeType, item.id)}
           activeItems={[selectedItem]}
         />
       </GridItem>

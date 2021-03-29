@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { Button, Card, CardBody, CardTitle, List, ListItem } from '@patternfly/react-core';
+import { Button, Card, CardBody, CardTitle, List, ListItem, Text } from '@patternfly/react-core';
 import { useHistory } from 'react-router-dom';
+import ProviderIcon from '@patternfly/react-icons/dist/js/icons/cloud-tenant-icon';
+import HostIcon from '@patternfly/react-icons/dist/js/icons/container-node-icon';
 import PowerOnIcon from '@patternfly/react-icons/dist/js/icons/on-running-icon';
 import PowerOffIcon from '@patternfly/react-icons/dist/js/icons/power-off-icon';
 import MemoryIcon from '@patternfly/react-icons/dist/js/icons/memory-icon';
@@ -37,7 +39,20 @@ const VMCard: React.FunctionComponent<IVMCardProps> = ({ vm }: IVMCardProps) => 
           Name: {vm.name} - Id: {vm.id.split('.')[0]}
         </CardBody>
       </CardTitle>
-      <CardBody>Provider: {vm.id.split('.')[1]}</CardBody>
+      <CardBody>
+        <ProviderIcon /> Provider: {vm.id.split('.')[1]}
+      </CardBody>
+      {vm.host ? (
+        <CardBody>
+          <HostIcon /> Host
+          <List>
+            <ListItem key={vm.host.id}>Name: {vm.host.id.split('.')[0]}</ListItem>
+            <ListItem key={vm.host.inMaintenance}>
+              Status: {vm.host.inMaintenance ? 'In Maintenance' : 'Ready'}
+            </ListItem>
+          </List>
+        </CardBody>
+      ) : null}
       <CardBody>
         {vm.powerState === 'poweredOn' ? <PowerOnIcon /> : <PowerOffIcon />} Power State:{' '}
         {vm.powerState === 'poweredOn' ? 'On' : 'Off'}
@@ -52,18 +67,27 @@ const VMCard: React.FunctionComponent<IVMCardProps> = ({ vm }: IVMCardProps) => 
         <CPUIcon /> {vm.cpuHotAddEnabled ? 'CPU Hot Add Enabled' : 'CPU Hot Add Disabled'}
       </CardBody>
       <CardBody>Firmware: {vm.firmware}</CardBody>
-      {vm.host ? (
-        <CardBody>
-          Host: {vm.host.id}, Status: {vm.host.inMaintenance ? 'In Maintenance' : 'Ready'}
-        </CardBody>
-      ) : null}
-      {/* <CardBody>Concerns: {vm.concerns && vm.concerns.length > 0 ? vm.concerns : 'none'}</CardBody> */}
+      <CardBody>
+        Concerns:{' '}
+        {vm.concerns && vm.concerns.length > 0 ? (
+          <List>
+            {vm.concerns.map((concern) => (
+              <ListItem key={vm.id.label}>
+                {concern.category} - {concern.label}
+                <Text>{concern.assessment}</Text>
+              </ListItem>
+            ))}
+          </List>
+        ) : (
+          'none'
+        )}
+      </CardBody>
       <CardBody>
         <DiskIcon /> Disks
         {vm.disks && vm.disks.length > 0 ? (
           <List>
             {vm.disks.map((disk) => (
-              <ListItem key={disk.name}>
+              <ListItem key={`${vm.id}.${disk.name}`}>
                 <Button variant="link" onClick={() => onClickDatastore(`${disk.datastore.id}.${vm.id.split('.')[1]}`)}>
                   {disk.name}
                 </Button>
@@ -79,7 +103,7 @@ const VMCard: React.FunctionComponent<IVMCardProps> = ({ vm }: IVMCardProps) => 
         {vm.networks && vm.networks.length > 0 ? (
           <List>
             {vm.networks.map((network) => (
-              <ListItem key={network.name}>
+              <ListItem key={`${vm.id}.${network.name}.${Math.random()}`}>
                 <Button variant="link" onClick={() => onClickNetwork(network.name)}>
                   {network.name.split('.')[0]}
                 </Button>

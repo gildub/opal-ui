@@ -1,4 +1,4 @@
-import { ContextSelectorFooter } from '@patternfly/react-core';
+import React from 'react';
 import { useHistory, useRouteMatch } from 'react-router';
 
 import { ProviderType, TreeType } from '../components/Explorer';
@@ -45,6 +45,14 @@ const subTabStates = [
   { kind: 'vmcs', title: 'Virtual Machines' },
 ];
 
+const getProvider = (id) => {
+  return id.split('.')[1];
+};
+
+const getItemId = (id) => {
+  return id.split('.')[0];
+};
+
 const useExplorerRouteMatch = () => {
   const getTitle = (providerType) => tabStates.find((tab) => tab.kind === providerType)?.title;
   const getSubTitle = (treeType) => subTabStates.find((tab) => tab.kind === treeType)?.title;
@@ -70,16 +78,9 @@ const useExplorerRouteMatch = () => {
   });
 
   const goToItem = (providerType: ProviderType, treeType: TreeType, itemId) => {
-    const getProvider = (id) => {
-      return id.split('.')[1];
-    };
-
-    const getItem = (id) => {
-      return id.split('.')[0];
-    };
-
     const provider = getProvider(itemId);
-    const element = getItem(itemId);
+    const element = getItemId(itemId);
+
     if (!provider) {
       history.push(`/analytics/explorer/${providerType}/${treeType}/${element}`);
       return;
@@ -104,9 +105,10 @@ const useExplorerRouteMatch = () => {
   const providerType = providerTypeFromRoute();
   const treeType = treeTypeFromRoute(providerType);
 
-  const activeItem = elementMatch?.params.elementId
-    ? `${elementMatch.params.elementId}.${elementMatch.params.provider}`
-    : `${providerMatch?.params.provider}`;
+  const activeItem = () =>
+    elementMatch?.params.elementId
+      ? `${elementMatch.params.elementId}.${elementMatch.params.provider}`
+      : `${providerMatch?.params.provider}`;
 
   const pageTitle = getTitle(providerType);
   const pageTitleSub = getSubTitle(treeType);

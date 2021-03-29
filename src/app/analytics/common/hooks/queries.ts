@@ -53,10 +53,29 @@ export const queryVMsByProvider = `
         kind
         children: vms {
           ...FolderFields
-          ... on VM {id name kind }
+          ...VMFields
           ...ChildrenRecursive
         }
       }
+    }
+  }
+
+  fragment VMFields on VM {
+    id name kind
+    powerState
+    memoryMB
+    cpuHotAddEnabled
+    firmware
+    host { id inMaintenance }
+    concerns { label category assessment }
+    disks {
+      kind name: file shared
+      datastore { id }
+      }
+    networks {
+      ... on Network { kind name: id }
+      ... on DVPortGroup { kind name: id }
+      ... on DVSwitch { kind name: id }
     }
   }
 
@@ -65,7 +84,7 @@ export const queryVMsByProvider = `
     name
     kind
     children {
-      ... on VM {id name kind }
+      ...VMFields
     }
   }
 

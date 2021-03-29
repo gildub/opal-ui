@@ -89,7 +89,7 @@ const Explorer: React.FunctionComponent = () => {
                   />
                 ) : null}
               </Tab>
-              <Tab eventKey="hostTreeFlat" title={<TabTitleText>Flat Host VMs</TabTitleText>}>
+              <Tab eventKey="hostTreeFlat" title={<TabTitleText>Filter VMs</TabTitleText>}>
                 {hostsByProvider ? <HostTreeFlatTable providers={hostsByProvider} /> : null}
               </Tab>
             </Tabs>
