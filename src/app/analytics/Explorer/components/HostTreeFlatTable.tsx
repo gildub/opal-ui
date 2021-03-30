@@ -176,17 +176,21 @@ const HostTreeFlatTable: React.FunctionComponent<IHostTreeFlatTableProps> = ({
       rows.push({
         meta: { vm },
         cells: [
-          vm.id.split('.')[0],
+          <div key={vm.id}>
+            <Button variant="link" isInline onClick={(_event) => goToItem(ProviderType.vsphere, TreeType.hosts, vm.id)}>
+              {vm.id.split('.')[0]}
+            </Button>
+          </div>,
           vm.name,
           `${vm.provider}/${vm.datacenter}/${vm.cluster}/${vm.host}`,
           highestConcern ? (
-            <Button variant="link" onClick={(event) => goToItem(ProviderType.vsphere, TreeType.hosts, vm.id)}>
+            <>
               {criticalConcerns.length ? `${criticalConcerns.length} x Critical` : null}
               {criticalConcerns.length && warningConcerns.length ? ' - ' : null}
               {warningConcerns.length ? `${warningConcerns.length} x Warning` : null}
               {warningConcerns.length && informationConcerns.length ? ' - ' : null}
               {informationConcerns.length ? `${informationConcerns.length} x Information` : null}
-            </Button>
+            </>
           ) : (
             'No concerns'
           ),
