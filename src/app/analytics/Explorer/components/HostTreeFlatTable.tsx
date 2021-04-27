@@ -32,9 +32,9 @@ const getVMsFromTreeQuery = (providers: any[]): any[] =>
   );
 
 // TODO: Use forklift-ui function
-const getMostSevereVMConcern = (concerns: any): any | null => {
-  if (!concerns || concerns.length === 0) {
-    return null;
+const getMostSevereVMConcern = (concerns: any): any | '' => {
+  if (concerns.length === 0) {
+    return '';
   }
   const critical = concerns.find((concern) => concern.category === 'Critical');
   const warning = concerns.find((concern) => concern.category === 'Warning');
